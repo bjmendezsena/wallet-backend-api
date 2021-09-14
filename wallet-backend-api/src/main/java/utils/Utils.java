@@ -9,6 +9,7 @@ public class Utils {
 	public static String getCurrentDate() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 		return dtf.format(LocalDateTime.now());
+		
 	}
 
 	public static String generateSecureId() {
