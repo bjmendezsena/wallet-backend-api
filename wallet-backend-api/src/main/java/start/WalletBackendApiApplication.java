@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.client.RestTemplate;
 
-@ComponentScan({"auth.application", "auth.infrastructure", "shared.exceptions"})
+@ComponentScan({"auth.application", "auth.infrastructure", "shared.domain", "wallet.application", "wallet.infrastructure"})
 @SpringBootApplication
 public class WalletBackendApiApplication {
 

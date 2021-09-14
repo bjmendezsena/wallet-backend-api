@@ -13,9 +13,6 @@ public class AuthService {
 	@Autowired
 	private AuthRepository authRepository;
 
-	public AuthService(AuthRepository authRepository) {
-		this.authRepository = authRepository;
-	}
 
 	public User login(LoginRequest request) {
 		return this.authRepository.login(request);

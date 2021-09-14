@@ -1,5 +1,9 @@
 package auth.domain;
 
+import java.util.List;
+
+import wallet.domain.Wallet;
+
 public class User {
 
 	private String dni;
@@ -7,6 +11,7 @@ public class User {
 	private String lastName;
 	private String email;
 	private String password;
+	private List<Wallet> wallets;
 
 	public User(String dni, String name, String lastName, String email, String password) {
 		super();
@@ -61,5 +66,12 @@ public class User {
 		this.password = password;
 	}
 
+	public List<Wallet> getWallets() {
+		return wallets;
+	}
+
+	public void setWallets(List<Wallet> wallets) {
+		this.wallets = wallets;
+	}
 
 }

@@ -1,4 +1,4 @@
-package shared;
+package shared.domain;
 
 public class RequestResponse {
 	private boolean ok;

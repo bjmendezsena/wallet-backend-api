@@ -1,11 +1,9 @@
-package shared.exceptions;
+package shared.domain;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import shared.RequestResponse;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {

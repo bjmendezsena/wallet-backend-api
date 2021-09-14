@@ -10,14 +10,14 @@ import org.springframework.web.client.RestTemplate;
 
 import auth.domain.LoginRequest;
 import auth.domain.User;
-import shared.RequestResponse;
+import shared.domain.RequestResponse;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
 	@Autowired
-	RestTemplate template;
+	private RestTemplate template;
 
 	@Autowired
 	private AuthService service;
