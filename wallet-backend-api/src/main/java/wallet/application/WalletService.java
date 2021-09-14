@@ -31,7 +31,7 @@ public class WalletService {
 		balance.setQuantity(data.getQuantity());
 		balance.setId(String.valueOf(System.currentTimeMillis()));
 
-		return this.walletRepository.createWallet(balance, data.getOwnerId());
+		return this.walletRepository.createWallet(balance, dni);
 	}
 
 	public List<Movement> deposit(WalletDTO data) throws RuntimeException {
@@ -58,4 +58,7 @@ public class WalletService {
 		return this.walletRepository.getMovements(id);
 	}
 
+	public Wallet getWalletByDni(String dni) {
+		return this.walletRepository.getWalletByOwner(dni);
+	}
 }

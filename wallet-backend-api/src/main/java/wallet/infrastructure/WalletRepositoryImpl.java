@@ -25,11 +25,11 @@ public class WalletRepositoryImpl implements WalletRepository {
 		this.data = new ArrayList<Wallet>();
 
 		this.data.add(new Wallet(Utils.generateSecureId(),
-				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 100), "0001"));
+				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 100), "0001","666666666"));
 		this.data.add(new Wallet(Utils.generateSecureId(),
-				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 10), "0002"));
+				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 10), "0002","46471586V"));
 		this.data.add(new Wallet(Utils.generateSecureId(),
-				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 150), "0003"));
+				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 150), "0003", "46471588V"));
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class WalletRepositoryImpl implements WalletRepository {
 	}
 
 	@Override
-	public Wallet getWalletByOwner(String ownerId) throws RuntimeException {
+	public Wallet getWalletByOwner(String ownerId){
 		List<Wallet> result = this.data.stream().filter(wallet -> wallet.getOwnerid().equalsIgnoreCase(ownerId))
 				.collect(Collectors.toList());
 

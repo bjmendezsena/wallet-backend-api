@@ -11,12 +11,13 @@ public class Wallet {
 	private String accountNumber;
 	private List<Movement> movements;
 
-	public Wallet(String id, Balance balance, String accountNumber) {
+	public Wallet(String id, Balance balance, String accountNumber, String ownerid) {
 		super();
 		this.id = id;
 		this.currentBalance = balance;
 		this.accountNumber = accountNumber;
 		this.movements = new ArrayList<Movement>();
+		this.ownerid = ownerid;
 	}
 
 	public Wallet() {

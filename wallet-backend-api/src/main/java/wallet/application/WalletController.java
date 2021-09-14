@@ -66,5 +66,13 @@ public class WalletController {
 		return new RequestResponse(wallet, true);
 
 	}
+	
+	@GetMapping(path = "/owner/{dni}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public RequestResponse getWalletByDni(@PathVariable("dni") String dni) {
+		Wallet wallet = this.walletService.getWalletByDni(dni);
+		
+		return new RequestResponse(wallet, true);
+		
+	}
 
 }
