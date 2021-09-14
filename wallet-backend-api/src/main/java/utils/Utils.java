@@ -9,15 +9,18 @@ public class Utils {
 	public static String getCurrentDate() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 		return dtf.format(LocalDateTime.now());
-		
+
 	}
 
 	public static String generateSecureId() {
+
 		try {
 
 			SecureRandom number = SecureRandom.getInstance("SHA1PRNG");
 
-			return String.valueOf(number.nextInt());
+			int n = number.nextInt(1000000);
+
+			return String.valueOf(n);
 
 		} catch (Exception e) {
 			return String.valueOf(System.currentTimeMillis());

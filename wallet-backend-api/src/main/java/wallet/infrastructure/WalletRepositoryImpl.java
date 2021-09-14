@@ -62,12 +62,10 @@ public class WalletRepositoryImpl implements WalletRepository {
 		Wallet wallet = this.getWallet(walletDto.getId());
 
 		Movement movement = this.getMovement(walletDto);
+		wallet.getMovements().add(wallet.getMovements().size(), movement);
 
-		Balance currentBalance = wallet.getCurrentBalance();
-		currentBalance.setCurrentDate(movement.getQuantity().getCurrentDate());
-		currentBalance.setQuantity(currentBalance.getQuantity() + walletDto.getQuantity());
-
-		wallet.getMovements().add(movement);
+		Balance currentBalance = new Balance(Utils.generateSecureId(), movement.getQuantity().getCurrentDate(),
+				wallet.getCurrentBalance().getQuantity() + walletDto.getQuantity());
 
 		wallet.setCurrentBalance(currentBalance);
 
@@ -79,28 +77,28 @@ public class WalletRepositoryImpl implements WalletRepository {
 	@Override
 	public List<Movement> withdrawals(WalletDTO walletDto) {
 		walletDto.setDate(Utils.getCurrentDate());
-		Wallet result = this.getWallet(walletDto.getId());
+		Wallet wallet = this.getWallet(walletDto.getId());
 
 		Movement movement = getMovement(walletDto);
 
-		Balance currentBalance = result.getCurrentBalance();
+		Balance currentBalance = wallet.getCurrentBalance();
 
 		currentBalance.setCurrentDate(movement.getQuantity().getCurrentDate());
-		
+
 		float currentQuantity = currentBalance.getQuantity() - walletDto.getQuantity();
-		
-		if(currentQuantity < 0) {
+
+		if (currentQuantity < 0) {
 			throw new RuntimeException("You do not have enough balance to make this move");
 		}
 
 		currentBalance.setQuantity(currentBalance.getQuantity() - walletDto.getQuantity());
 
-		result.setCurrentBalance(currentBalance);
-		result.getMovements().add(movement);
+		wallet.setCurrentBalance(currentBalance);
+		wallet.getMovements().add(wallet.getMovements().size(), movement);
 
-		this.data.set(this.data.indexOf(result), result);
+		this.data.set(this.data.indexOf(wallet), wallet);
 
-		return result.getMovements();
+		return wallet.getMovements();
 	}
 
 	@Override

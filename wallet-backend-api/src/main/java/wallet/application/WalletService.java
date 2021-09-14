@@ -23,7 +23,7 @@ public class WalletService {
 		String dni = data.getOwnerId();
 
 		if (dni == null || dni.length() == 0) {
-			throw new RuntimeException("It is mandatory to inform the user's ID");
+			throw new RuntimeException("DNI is required");
 		}
 
 		Balance balance = new Balance();
@@ -38,7 +38,6 @@ public class WalletService {
 		if (data.getQuantity() <= 0) {
 			throw new RuntimeException("Deposit cannot be less than 1");
 		}
-		
 
 		data.setDeposit(true);
 
@@ -50,11 +49,11 @@ public class WalletService {
 
 		return this.walletRepository.withdrawals(data);
 	}
-	
+
 	public Wallet getWalletById(String id) {
 		return this.walletRepository.getWalletById(id);
 	}
-	
+
 	public List<Movement> getMovementsByWallet(String id) {
 		return this.walletRepository.getMovements(id);
 	}
