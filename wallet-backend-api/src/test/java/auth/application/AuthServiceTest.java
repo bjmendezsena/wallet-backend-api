@@ -44,13 +44,12 @@ public class AuthServiceTest {
 
 	@Test
 	void registerTest() {
-		boolean isAdded = false;
 		User user = TestHelpers.createUser();
 		user.setDni("4444");
 		user.setEmail("lewis@gmail.com");
-		isAdded = authService.register(user);
+		User result  = authService.register(user);
 
-		assertThat(isAdded).isTrue();
+		assertThat(result).isNotNull();
 	}
 
 	@Test
@@ -59,6 +58,7 @@ public class AuthServiceTest {
 		try {
 			User user = TestHelpers.createUser();
 			user.setEmail("test@test.com");
+			when(authService.register(user)).thenReturn(user);
 			authService.register(user);
 
 		} catch (Exception e) {

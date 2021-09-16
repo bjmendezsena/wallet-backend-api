@@ -2,9 +2,9 @@ package wallet.domain;
 
 public class Movement {
 
-	private Balance quantity;
 	private String concept;
 	private boolean isDeposit;
+	private Balance quantity;
 
 	public Balance getQuantity() {
 		return quantity;

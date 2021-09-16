@@ -4,5 +4,7 @@ public interface AuthRepository {
 
 	User login(LoginRequest request);
 
-	void register(User user);
+	User register(User user);
+	
+	User getUserByDni(String dni);
 }

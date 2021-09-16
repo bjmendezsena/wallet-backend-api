@@ -11,9 +11,11 @@ import org.springframework.stereotype.Repository;
 import utils.Utils;
 import wallet.domain.Balance;
 import wallet.domain.Movement;
+import wallet.domain.MovementDto;
 import wallet.domain.Wallet;
 import wallet.domain.WalletDTO;
 import wallet.domain.WalletRepository;
+
 
 @Repository
 public class WalletRepositoryImpl implements WalletRepository {
@@ -23,46 +25,16 @@ public class WalletRepositoryImpl implements WalletRepository {
 	@PostConstruct
 	public void init() {
 		this.data = new ArrayList<Wallet>();
-
-		this.data.add(new Wallet(Utils.generateSecureId(),
-				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 100), "0001","666666666"));
-		this.data.add(new Wallet(Utils.generateSecureId(),
-				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 10), "0002","46471586V"));
-		this.data.add(new Wallet(Utils.generateSecureId(),
-				new Balance(Utils.generateSecureId(), Utils.getCurrentDate(), 150), "0003", "46471588V"));
 	}
 
-	@Override
-	public Wallet createWallet(Balance balance, String ownerId) {
-
-		Wallet newWallet = new Wallet();
-
-		String accountNumber = String.valueOf(Utils.generateSecureId());
-
-		newWallet.setAccountNumber(accountNumber);
-		newWallet.setCurrentBalance(balance);
-		newWallet.setId(Utils.generateSecureId());
-		newWallet.setOwnerid(ownerId);
-		Movement movement = new Movement();
-		movement.setConcept("Initial balance");
-		movement.setDeposit(true);
-		movement.setQuantity(balance);
-		newWallet.getMovements().add(movement);
-
-		this.data.add(newWallet);
-
-		return newWallet;
-	}
 
 	@Override
-	public List<Movement> deposit(WalletDTO walletDto) {
-
-		walletDto.setDate(Utils.getCurrentDate());
+	public MovementDto deposit(WalletDTO walletDto) {
 
 		Wallet wallet = this.getWallet(walletDto.getId());
 
 		Movement movement = this.getMovement(walletDto);
-		wallet.getMovements().add(wallet.getMovements().size(), movement);
+		wallet.getMovements().add(0, movement);
 
 		Balance currentBalance = new Balance(Utils.generateSecureId(), movement.getQuantity().getCurrentDate(),
 				wallet.getCurrentBalance().getQuantity() + walletDto.getQuantity());
@@ -71,12 +43,19 @@ public class WalletRepositoryImpl implements WalletRepository {
 
 		this.data.set(this.data.indexOf(wallet), wallet);
 
-		return wallet.getMovements();
+		MovementDto newDeposit = new MovementDto();
+
+		newDeposit.setCurrentBalance(currentBalance);
+
+		newDeposit.setDate(walletDto.getDate());
+
+		newDeposit.setMovements(wallet.getMovements());
+
+		return newDeposit;
 	}
 
 	@Override
-	public List<Movement> withdrawals(WalletDTO walletDto) {
-		walletDto.setDate(Utils.getCurrentDate());
+	public MovementDto withdrawals(WalletDTO walletDto) {
 		Wallet wallet = this.getWallet(walletDto.getId());
 
 		Movement movement = getMovement(walletDto);
@@ -94,11 +73,19 @@ public class WalletRepositoryImpl implements WalletRepository {
 		currentBalance.setQuantity(currentBalance.getQuantity() - walletDto.getQuantity());
 
 		wallet.setCurrentBalance(currentBalance);
-		wallet.getMovements().add(wallet.getMovements().size(), movement);
+		wallet.getMovements().add(0, movement);
 
 		this.data.set(this.data.indexOf(wallet), wallet);
 
-		return wallet.getMovements();
+		MovementDto newWithdrawals = new MovementDto();
+
+		newWithdrawals.setCurrentBalance(currentBalance);
+
+		newWithdrawals.setDate(walletDto.getDate());
+
+		newWithdrawals.setMovements(wallet.getMovements());
+
+		return newWithdrawals;
 	}
 
 	@Override
@@ -128,7 +115,7 @@ public class WalletRepositoryImpl implements WalletRepository {
 	}
 
 	@Override
-	public Wallet getWalletByOwner(String ownerId){
+	public Wallet getWalletByOwner(String ownerId) {
 		List<Wallet> result = this.data.stream().filter(wallet -> wallet.getOwnerid().equalsIgnoreCase(ownerId))
 				.collect(Collectors.toList());
 
@@ -151,14 +138,52 @@ public class WalletRepositoryImpl implements WalletRepository {
 	}
 
 	@Override
-	public List<Movement> getMovements(String id) throws RuntimeException {
+	public MovementDto getMovements(String id) throws RuntimeException {
 		Wallet wallet = this.getWallet(id);
 
 		if (wallet == null) {
 			throw new RuntimeException("There is no wallet with this id");
 		}
 
-		return wallet.getMovements();
+		MovementDto movements = new MovementDto();
+
+		movements.setCurrentBalance(wallet.getCurrentBalance());
+		movements.setDate(wallet.getCurrentBalance().getCurrentDate());
+		movements.setMovements(wallet.getMovements());
+
+		return movements;
+	}
+
+
+	@Override
+	public Wallet createWallet(WalletDTO data) throws RuntimeException {
+		Balance balance = new Balance();
+		balance.setCurrentDate(Utils.getCurrentDate());
+		balance.setQuantity(data.getQuantity());
+		balance.setId(String.valueOf(System.currentTimeMillis()));
+
+		Wallet newWallet = new Wallet();
+
+		String accountNumber = String.valueOf(System.currentTimeMillis());
+
+		String concept = "Balance inicial";
+		if(data.getConcept() != null) {			
+			concept = !data.getConcept().isEmpty() ? data.getConcept():concept;
+		}
+
+		newWallet.setAccountNumber(accountNumber);
+		newWallet.setCurrentBalance(balance);
+		newWallet.setId(Utils.generateSecureId());
+		newWallet.setOwnerid(data.getOwnerId());
+		Movement movement = new Movement();
+		movement.setConcept(concept);
+		movement.setDeposit(true);
+		movement.setQuantity(balance);
+		newWallet.getMovements().add(movement);
+
+		this.data.add(newWallet);
+
+		return newWallet;
 	}
 
 }

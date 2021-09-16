@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import shared.domain.RequestResponse;
 import wallet.domain.Movement;
+import wallet.domain.MovementDto;
 import wallet.domain.Wallet;
 import wallet.domain.WalletDTO;
 
@@ -37,7 +38,7 @@ public class WalletController {
 
 	@PostMapping(path = "/deposit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public RequestResponse depositMoney(@RequestBody WalletDTO request) {
-		List<Movement> movements = this.walletService.deposit(request);
+		MovementDto movements = this.walletService.deposit(request);
 
 		return new RequestResponse(movements, true);
 
@@ -45,7 +46,7 @@ public class WalletController {
 
 	@PostMapping(path = "/withdrawals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public RequestResponse withdrawalsMoney(@RequestBody WalletDTO request) {
-		List<Movement> movements = this.walletService.withdrawals(request);
+		MovementDto movements = this.walletService.withdrawals(request);
 
 		return new RequestResponse(movements, true);
 
@@ -53,7 +54,7 @@ public class WalletController {
 
 	@GetMapping(path = "/movements{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public RequestResponse getMovements(@PathVariable("id") String id) {
-		List<Movement> movements = this.walletService.getMovementsByWallet(id);
+		MovementDto movements = this.walletService.getMovementsByWallet(id);
 
 		return new RequestResponse(movements, true);
 
@@ -66,13 +67,13 @@ public class WalletController {
 		return new RequestResponse(wallet, true);
 
 	}
-	
+
 	@GetMapping(path = "/owner/{dni}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public RequestResponse getWalletByDni(@PathVariable("dni") String dni) {
 		Wallet wallet = this.walletService.getWalletByDni(dni);
-		
+
 		return new RequestResponse(wallet, true);
-		
+
 	}
 
 }

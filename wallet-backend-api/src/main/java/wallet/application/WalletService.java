@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import auth.domain.AuthRepository;
 import utils.Utils;
 import wallet.domain.Balance;
 import wallet.domain.Movement;
+import wallet.domain.MovementDto;
 import wallet.domain.Wallet;
 import wallet.domain.WalletDTO;
 import wallet.domain.WalletRepository;
@@ -17,6 +19,9 @@ public class WalletService {
 
 	@Autowired
 	private WalletRepository walletRepository;
+	
+	@Autowired
+	private AuthRepository authRepository;
 
 	public Wallet createNewWallet(WalletDTO data) {
 
@@ -25,16 +30,17 @@ public class WalletService {
 		if (dni == null || dni.length() == 0) {
 			throw new RuntimeException("DNI is required");
 		}
+		
 
-		Balance balance = new Balance();
-		balance.setCurrentDate(Utils.getCurrentDate());
-		balance.setQuantity(data.getQuantity());
-		balance.setId(String.valueOf(System.currentTimeMillis()));
 
-		return this.walletRepository.createWallet(balance, dni);
+		if(this.authRepository.getUserByDni(dni) == null) {
+			throw new RuntimeException("This user does not exist in the database");
+		}
+
+		return this.walletRepository.createWallet(data);
 	}
 
-	public List<Movement> deposit(WalletDTO data) throws RuntimeException {
+	public MovementDto deposit(WalletDTO data) throws RuntimeException {
 		if (data.getQuantity() <= 0) {
 			throw new RuntimeException("Deposit cannot be less than 1");
 		}
@@ -44,7 +50,7 @@ public class WalletService {
 		return this.walletRepository.deposit(data);
 	}
 
-	public List<Movement> withdrawals(WalletDTO data) throws RuntimeException {
+	public MovementDto withdrawals(WalletDTO data) throws RuntimeException {
 		data.setDeposit(false);
 
 		return this.walletRepository.withdrawals(data);
@@ -54,7 +60,7 @@ public class WalletService {
 		return this.walletRepository.getWalletById(id);
 	}
 
-	public List<Movement> getMovementsByWallet(String id) {
+	public MovementDto getMovementsByWallet(String id) {
 		return this.walletRepository.getMovements(id);
 	}
 

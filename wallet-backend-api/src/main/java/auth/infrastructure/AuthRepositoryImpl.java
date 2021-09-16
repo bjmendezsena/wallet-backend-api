@@ -20,17 +20,16 @@ public class AuthRepositoryImpl implements AuthRepository {
 	@PostConstruct
 	public void init() {
 		this.data = new ArrayList<User>();
-		this.data.add(new User("46471586V", "Lewis", "Mendez", "test@test.com", "123456" ));
-		this.data.add(new User("46471585Q", "Leinor", "Mendez", "test2@test.com", "123456"));
-		this.data.add(new User("46471585V", "Miguel", "Mendez", "test3@test.com", "123456"));
 	}
 
 	@Override
-	public void register(User user) throws RuntimeException {
+	public User register(User user) throws RuntimeException {
 		validateUser(user);
 
 		user.setDni(user.getDni().toUpperCase());
 		this.data.add(user);
+		
+		return user;
 
 	}
 
@@ -57,6 +56,19 @@ public class AuthRepositoryImpl implements AuthRepository {
 		}
 
 		throw new RuntimeException("Invalid credentials");
+	}
+
+	@Override
+	public User getUserByDni(String dni) {
+		List<User> result = this.data.stream()
+				.filter(user -> user.getDni() != null && user.getDni().equalsIgnoreCase(dni))
+				.collect(Collectors.toList());
+		
+		if(result != null && result.size() > 0) {
+			return result.get(0);
+		}
+		
+		return null;
 	}
 
 }

@@ -31,11 +31,11 @@ public class AuthController {
 	}
 
 	@PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public RequestResponse register(@RequestBody User user) {
+	public RequestResponse register(@RequestBody User data) {
 
-		this.service.register(user);
+		User user = this.service.register(data);
 
-		return new RequestResponse("User has successfully registered", true);
+		return new RequestResponse(user, true);
 
 	}
 

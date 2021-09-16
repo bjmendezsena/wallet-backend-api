@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 public class Utils {
 
 	public static String getCurrentDate() {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		return dtf.format(LocalDateTime.now());
 
 	}
