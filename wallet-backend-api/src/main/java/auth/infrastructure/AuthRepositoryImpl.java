@@ -20,6 +20,7 @@ public class AuthRepositoryImpl implements AuthRepository {
 	@PostConstruct
 	public void init() {
 		this.data = new ArrayList<User>();
+		this.data.add(new User("123456", "test", "test", "test@test.com", "123456"));
 	}
 
 	@Override
